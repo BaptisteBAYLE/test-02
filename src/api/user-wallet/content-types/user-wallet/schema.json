@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "user_wallets",
+  "info": {
+    "singularName": "user-wallet",
+    "pluralName": "user-wallets",
+    "displayName": "User Wallet",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "totalDollarsValue": {
+      "type": "string"
+    },
+    "wallet": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::wallet.wallet",
+      "inversedBy": "user_wallets"
+    }
+  }
+}

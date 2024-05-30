@@ -1,5 +1,88 @@
 import type { Struct, Schema } from '@strapi/strapi';
 
+export interface ApiProductProduct extends Struct.CollectionTypeSchema {
+  collectionName: 'products';
+  info: {
+    singularName: 'product';
+    pluralName: 'products';
+    displayName: 'Product';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Schema.Attribute.String;
+    wallets: Schema.Attribute.Relation<'manyToMany', 'api::wallet.wallet'>;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+  };
+}
+
+export interface ApiUserWalletUserWallet extends Struct.CollectionTypeSchema {
+  collectionName: 'user_wallets';
+  info: {
+    singularName: 'user-wallet';
+    pluralName: 'user-wallets';
+    displayName: 'User Wallet';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    totalDollarsValue: Schema.Attribute.String;
+    wallet: Schema.Attribute.Relation<'manyToOne', 'api::wallet.wallet'>;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+  };
+}
+
+export interface ApiWalletWallet extends Struct.CollectionTypeSchema {
+  collectionName: 'wallets';
+  info: {
+    singularName: 'wallet';
+    pluralName: 'wallets';
+    displayName: 'Wallet';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetMinMaxLength<{
+        minLength: 3;
+      }>;
+    products: Schema.Attribute.Relation<'manyToMany', 'api::product.product'>;
+    user_wallets: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::user-wallet.user-wallet'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+  };
+}
+
 export interface PluginUploadFile extends Struct.CollectionTypeSchema {
   collectionName: 'files';
   info: {
@@ -794,6 +877,9 @@ export interface AdminTransferTokenPermission
 declare module '@strapi/strapi' {
   export module Public {
     export interface ContentTypeSchemas {
+      'api::product.product': ApiProductProduct;
+      'api::user-wallet.user-wallet': ApiUserWalletUserWallet;
+      'api::wallet.wallet': ApiWalletWallet;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;
       'plugin::i18n.locale': PluginI18NLocale;
